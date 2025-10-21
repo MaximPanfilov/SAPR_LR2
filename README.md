@@ -7,3 +7,7 @@
 1. simulate
 2. vopt +acc "tb_apb" -o "test"
 3. vsim "test"
+
+[LAUNCH:] with coverage 
+vlog *.sv +cover=bcesft
+vsim -coverage tb_apb -do "run -all; coverage save apb_coverage.ucdb; coverage report -detail; quit"

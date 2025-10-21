@@ -103,13 +103,14 @@ module apb_slave(apb_interface apb_if);
                 end 
                 else begin 
                     // Read operation display
+		    //[TODO + FIX:] Why it doesnt work properly? Check and fix
                     case (apb_if.PADDR)
                         DATA_ADDR: begin
                             $display("[APB_SLAVE] Read DATA register: %h", data_reg);
                         end
                         CONTROL_ADDR: begin
                             $display("[APB_SLAVE] Read CONTROL register: %h", control_reg);
-                        end
+                        end 
                         RESULT_ADDR: begin
                             $display("[APB_SLAVE] Read RESULT register: %h", result_reg);
                         end
