@@ -30,19 +30,19 @@ module tb_apb();
         #15;
 
         $display("\n\t=====[TEST] Test 2. First OR accumulation =====");
-        apb_master.write('h0, 32'h0000000F); // Write to DATA register
+        apb_master.write('h0, 32'h0000000C); // Write to DATA register
         apb_master.write('h4, 32'h00000001); // Write to CONTROL register with start bit
         apb_master.read('h8); // Read RESULT register
         #15;
 
         $display("\n\t=====[TEST] Test 3. Second OR accumulation =====");
-        apb_master.write('h0, 32'h000000F0); // Write new value to DATA
+        apb_master.write('h0, 32'h000000B0); // Write new value to DATA
         apb_master.write('h4, 32'h00000001); // Start operation
         apb_master.read('h8); // Read RESULT register
         #15;
 
         $display("\n\t=====[TEST] Test 4. Third OR accumulation =====");
-        apb_master.write('h0, 32'h00000F00); // Write new value to DATA
+        apb_master.write('h0, 32'h00000A00); // Write new value to DATA
         apb_master.write('h4, 32'h00000001); // Start operation
         apb_master.read('h8); // Read RESULT register
         #15;
