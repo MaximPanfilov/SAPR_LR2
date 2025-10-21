@@ -10,6 +10,10 @@ module apb_slave(apb_interface apb_if);
     localparam CONTROL_ADDR = 8'h04;   
     localparam RESULT_ADDR  = 8'h08;  
 
+    // Control register bits
+    localparam START_BIT = 0;  // bit 0 - start OR accumulation
+    localparam RESET_BIT = 1;  // bit 1 - reset result register
+
     always_ff @(posedge apb_if.PCLK or negedge apb_if.PRESETn) begin
         if (!apb_if.PRESETn) begin
             // Reset registers
@@ -35,11 +39,15 @@ module apb_slave(apb_interface apb_if);
                     end
                     CONTROL_ADDR: begin
                         control_reg <= apb_if.PWDATA[1:0]; 
-                        if(!apb_if.PREADY) $display("[APB_SLAVE] Write CONTROL register: %h", apb_if.PWDATA[1:0]);
+                        if(!apb_if.PREADY) $display("[APB_SLAVE] Write CONTROL register: %b", apb_if.PWDATA[1:0]);
                         
-                        // If operation start bit is set (bit 0)
-                        if (apb_if.PWDATA[0]) begin
-                            // Perform OR accumulation operation
+                        // Reset result register if reset bit is set
+                        if (apb_if.PWDATA[RESET_BIT]) begin
+                            result_reg <= 32'h0;
+                            if(!apb_if.PREADY) $display("[APB_SLAVE] Reset result register");
+                        end
+                        // OR accumulation if start bit is set (and not resetting)
+                        else if (apb_if.PWDATA[START_BIT]) begin
                             result_reg <= result_reg | data_reg;
                             if(!apb_if.PREADY) $display("[APB_SLAVE] OR accumulation: result = %h", result_reg | data_reg);
                         end
@@ -67,7 +75,7 @@ module apb_slave(apb_interface apb_if);
                     end
                     CONTROL_ADDR: begin
                         apb_if.PRDATA <= {30'b0, control_reg}; 
-                        if(!apb_if.PREADY) $display("[APB_SLAVE] Read CONTROL register: %h", control_reg);
+                        if(!apb_if.PREADY) $display("[APB_SLAVE] Read CONTROL register: %b", control_reg);
                     end
                     RESULT_ADDR: begin
                         apb_if.PRDATA <= result_reg;

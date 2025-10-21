@@ -11,3 +11,5 @@
 [LAUNCH:] with coverage 
 vlog *.sv +cover=bcesft
 vsim -coverage tb_apb -do "run -all; coverage save apb_coverage.ucdb; coverage report -detail; quit"
+
+To see percentages on coverage go: Instance (bottom bar) -> Instance Coverage (upper tool bar) -> Code coverage reports
