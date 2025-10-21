@@ -1,4 +1,3 @@
-
 interface apb_interface;
     
     logic PCLK;   
@@ -6,7 +5,7 @@ interface apb_interface;
     logic PSEL;    
     logic PENABLE; 
     logic PWRITE;   
-    logic [31:0] PADDR;  
+    logic [7:0] PADDR;  
     logic [31:0] PWDATA; 
     logic [31:0] PRDATA;
     logic PSLVERR;  
