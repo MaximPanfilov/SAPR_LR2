@@ -20,14 +20,21 @@ module tb_apb();
     apb_master apb_master (apb_if.master_mp);
     
     initial begin
-        @(posedge reset);
-        #10;
+        wait(reset == 1);
+        #50;
 
         $display("\n\t=====[TEST] Test 1. Reset values =====");
         apb_master.read(8'h00); // Read DATA register
         apb_master.read(8'h04); // Read CONTROL register  
         apb_master.read(8'h08); // Read RESULT register
         #15;
+
+	// conditions
+        $display("\n\t=====[TEST] Test 1.5. Additional coverage tests =====");
+	apb_master.read(8'h00); // DATA
+        #10;
+        
+
 
         $display("\n\t=====[TEST] Test 2. First OR accumulation =====");
         apb_master.write(8'h00, 32'h0000000C); // Write to DATA register
@@ -116,6 +123,27 @@ module tb_apb();
         apb_master.read(8'h04); // CONTROL  
         apb_master.read(8'h08); // RESULT
         #15;
+
+        $display("\n\t=====[TEST] Test 14. Final coverage tests =====");
+        
+	//conditions
+        repeat(3) begin
+            apb_master.read(8'h00); //[NOTE:]does not help to increase coverage. It asks to start READ operation with apb_PWRITE = 1, which is impossible 
+            #5;
+        end
+        
+        apb_master.read(8'h00); // DATA
+        apb_master.read(8'h04); // CONTROL
+        apb_master.read(8'h08); // RESULT
+        
+        apb_master.read(8'h0C); // Invalid address
+        #10;
+
+        $display("\n\t=====[TEST] Test 15. Final coverage tests =====");
+        reset = 0; #10; reset = 1;
+        apb_master.read('h0);
+        apb_master.read('h4);
+        apb_master.read('h8);
 
         $display("\n\t=====[ALL TESTS COMPLETED] =====");
         $finish;
